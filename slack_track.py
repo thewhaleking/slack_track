@@ -12,9 +12,10 @@ import yaml
 logging.basicConfig(stream=sys.stdout, format="%(asctime)s :: %(levelname)s :: %(message)s")
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+
 try:
     with open(os.path.join(FILE_PATH, "config", "config.yaml")) as config_file:
-        CONFIG = yaml.load(config_file)
+        CONFIG = yaml.safe_load(config_file)
 except FileNotFoundError:
     logging.error("Config file not found. Have you run setup.py yet?")
     exit()
