@@ -4,6 +4,7 @@ import datetime
 from functools import reduce
 import logging
 import os
+import sqlite3
 import sys
 from typing import List, Tuple
 
@@ -20,6 +21,10 @@ try:
 except FileNotFoundError:
     logging.error("Config file not found. Have you run setup.py yet?")
     exit()
+
+con = sqlite3.connect("slack_track.db", check_same_thread=False)
+con.isolation_level = None
+cursor = con.cursor()
 
 
 def get_slack_users(slack_client: WebClient) -> list:
@@ -47,11 +52,42 @@ def flatten_keys(user: dict) -> List[str]:
     return list(keys)
 
 
+def items_to_rows(users: list, column_names: tuple):
+    indices = {y: x for (x, y) in enumerate(column_names)}
+    num_of_cols = len(column_names)
+
+    def make_row(user: dict):
+        row = ['' for _ in range(num_of_cols)]
+        row[0] = datetime.date.today()
+
+        def dict_breaker(d: dict):
+            for key, value in d.items():
+                if type(value) is dict:
+                    return dict_breaker(value)
+                else:
+                    try:
+                        row[indices[key]] = value
+                    except KeyError:
+                        pass
+        dict_breaker(user)
+        return row
+
+    rows = map(make_row, users)
+    return rows
+
+
 def main():
     slack_client = WebClient(token=CONFIG["slack_token"])
     slack_users = get_slack_users(slack_client)
-    keys = flatten_keys(slack_users[0])
-    print(keys)
+    column_names = tuple(["date"] + flatten_keys(slack_users[0]))
+    try:
+        cursor.execute(f"CREATE TABLE Slack {column_names}")
+    except sqlite3.OperationalError:
+        pass
+    rows = items_to_rows(slack_users, column_names)
+    question_marks = ','.join('?' for _ in range(len(column_names)))
+    cursor.executemany(f"INSERT INTO Slack VALUES ({question_marks})", rows)
+    con.commit()
 
 
 if __name__ == "__main__":
