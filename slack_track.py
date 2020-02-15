@@ -77,7 +77,7 @@ def items_to_rows(users: list, column_names: tuple):
 
     def make_row(user: dict):
         flat = {**flatten_dict(user), **{"date": today}}
-        row = [flat.get(x, "") for x in column_names]
+        row = [flat.get(x, None) for x in column_names]
         return row
 
     rows = map(make_row, users)
