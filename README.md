@@ -1,6 +1,9 @@
 # Slack Track
 Tracks changes to the user base of your Slack instance across a given time period
 
+## Note: WIP
+This is a work-in-progress made for my own use. It will have many breaking changes until it gets a 0.1 version, which may never come.
+You are free to use and build upon this if you want, but should in no way expect it to be good or consistent.
 
 ### Requirements
 1. Most mainstream Linux distros are "supported". Probably works on macOS. I haven't tried.  
