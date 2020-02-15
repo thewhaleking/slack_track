@@ -99,10 +99,7 @@ def main():
     slack_client = WebClient(token=CONFIG["slack_token"])
     slack_users = get_slack_users(slack_client)
     column_names = tuple(["date"] + list(flatten_dict(slack_users[0]).keys()))
-    try:
-        cursor.execute(f"CREATE TABLE Slack {column_names}")
-    except sqlite3.OperationalError:
-        pass
+    cursor.execute(f"CREATE TABLE IF NOT EXISTS Slack {column_names}")
     rows = items_to_rows(slack_users, column_names)
     question_marks = ','.join('?' for _ in range(len(column_names)))
     cursor.executemany(f"INSERT INTO Slack VALUES ({question_marks})", rows)
