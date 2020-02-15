@@ -102,7 +102,8 @@ def main():
     cursor.execute(f"CREATE TABLE IF NOT EXISTS Slack {column_names}")
     rows = items_to_rows(slack_users, column_names)
     question_marks = ','.join('?' for _ in range(len(column_names)))
-    cursor.executemany(f"INSERT INTO Slack VALUES ({question_marks})", rows)
+    col_name_strings = ','.join(str(x) for x in column_names)
+    cursor.executemany(f"INSERT INTO Slack ({col_name_strings}) VALUES ({question_marks})", rows)
     con.commit()
 
 
