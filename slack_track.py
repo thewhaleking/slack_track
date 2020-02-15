@@ -89,6 +89,16 @@ def get_table_column_names(table: str) -> list:
     return [x[1] for x in cursor]
 
 
+def get_data_from_previous_run() -> iter:
+    today = datetime.date.today()
+    cursor.execute("SELECT DISTINCT date FROM Slack WHERE date != ?", (today,))
+    sorted_dates = sorted(x[0] for x in cursor)
+    if not sorted_dates:
+        raise ValueError("Does not appear to have an data from a previous time.")
+    else:
+        cursor.execute("SELECT * FROM Slack WHERE date = ?", (sorted_dates[-1],))
+        return (x for x in cursor)
+
 def main():
     slack_client = WebClient(token=CONFIG["slack_token"])
     slack_users = get_slack_users(slack_client)
