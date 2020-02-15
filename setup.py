@@ -37,8 +37,8 @@ def main():
         python_bin = os.path.join(FILE_PATH, "venv", "bin", "python")
         script_path = os.path.join(FILE_PATH, "slack_track.py")
         user = os.environ["USER"]
-        subprocess.call(f"""(crontab -u {user} -l; echo "@{desired_frequency} {python_bin} {script_path}" )"""
-                        f"""| crontab -u {user} -""", shell=True)
+        subprocess.call(f"""(crontab -l; echo "@{desired_frequency} {python_bin} {script_path}" )"""
+                        f"""| crontab -""", shell=True)
 
 if __name__ == "__main__":
     main()
