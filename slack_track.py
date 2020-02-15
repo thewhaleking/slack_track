@@ -84,6 +84,11 @@ def items_to_rows(users: list, column_names: tuple):
     return rows
 
 
+def get_table_column_names(table: str) -> list:
+    cursor.execute(f"PRAGMA table_info({table});")
+    return [x[1] for x in cursor]
+
+
 def main():
     slack_client = WebClient(token=CONFIG["slack_token"])
     slack_users = get_slack_users(slack_client)
