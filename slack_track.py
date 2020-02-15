@@ -52,9 +52,28 @@ def flatten_keys(user: dict) -> List[str]:
     return list(keys)
 
 
+def flatten_dict(multi_level: dict) -> dict:
+    """
+    Takes a single user dict and recursively pulls the keys and values, assembling them into a
+    single-level deep dict.
+    :param multi_level: dict from which you would like broken down to a single level deep
+    :return: 1D dict 
+    """
+    def reduction(d: dict, items: tuple):
+        key, value = items
+        if type(value) is dict:
+            return reduce(reduction, value.items(), d)
+        else:
+            return {**d, **{key: value}}
+
+    flat_dict = reduce(reduction, multi_level.items(), {})
+    return flat_dict
+
+
 def items_to_rows(users: list, column_names: tuple):
     indices = {y: x for (x, y) in enumerate(column_names)}
     num_of_cols = len(column_names)
+    today = datetime.date.today()
 
     def make_row(user: dict):
         row = ['' for _ in range(num_of_cols)]
@@ -79,7 +98,7 @@ def items_to_rows(users: list, column_names: tuple):
 def main():
     slack_client = WebClient(token=CONFIG["slack_token"])
     slack_users = get_slack_users(slack_client)
-    column_names = tuple(["date"] + flatten_keys(slack_users[0]))
+    column_names = tuple(["date"] + list(flatten_dict(slack_users[0]).keys()))
     try:
         cursor.execute(f"CREATE TABLE Slack {column_names}")
     except sqlite3.OperationalError:
