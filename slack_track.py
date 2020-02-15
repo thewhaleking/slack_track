@@ -76,19 +76,8 @@ def items_to_rows(users: list, column_names: tuple):
     today = datetime.date.today()
 
     def make_row(user: dict):
-        row = ['' for _ in range(num_of_cols)]
-        row[0] = datetime.date.today()
-
-        def dict_breaker(d: dict):
-            for key, value in d.items():
-                if type(value) is dict:
-                    return dict_breaker(value)
-                else:
-                    try:
-                        row[indices[key]] = value
-                    except KeyError:
-                        pass
-        dict_breaker(user)
+        flat = {**flatten_dict(user), **{"date": today}}
+        row = [flat.get(x, "") for x in column_names]
         return row
 
     rows = map(make_row, users)
