@@ -76,11 +76,25 @@ def get_table_column_names(table: str) -> list:
 
 
 def get_only_valid_col_names(table: str, col_names: Iterable[str]) -> Iterator[str]:
+    """
+    Compares a group of column names against valid column names for that table as produced from the the
+    SQLite PRAGMA table_info function for the specified table.
+    :param table: The name of the table for which to check the column names.
+    :param col_names: An iterable (list, set, tuple, etc.) from which you would like to check the validity against 
+                      the table's column names.
+    :return: Filter for all of the matches.
+    """
     table_cols = get_table_column_names("Slack")
     return filter(lambda x: x in table_cols, col_names)
 
 
 def get_data_from_previous_run(*attrs) -> Iterator:
+    """
+    Retrieves the table data for the previous run from the db.
+    :param attrs: The column name(s) to retrieve the data for (e.g. "name", "deleted", etc.). If not attrs are
+                  specified, pulls all columns with "*".
+    :return: Iterator of the sqlite cursor.
+    """
     today = datetime.date.today()
     cursor.execute("SELECT DISTINCT date FROM Slack WHERE date != ?", (today,))
     sorted_dates = sorted(x[0] for x in cursor)
@@ -102,6 +116,15 @@ def get_data_from_previous_run(*attrs) -> Iterator:
 
 
 def compare_current_and_previous_datasets(*attrs) -> List[set]:
+    """
+    Compares the previous two runs (where the most recent is usually the "current" run) of the script. Does the
+    comparison by utilizing the set.differences of the two. This works well when comparing a few attributes, such as
+    name and deleted, but doesn't work well when comparing all columns.
+    :param attrs: The column names to compare between the two runs (e.g. "name", "deleted", etc.). If no attrs are
+                  specified, pulls all columns with "*".
+    :return: List of the set differences, with 0 being difference between current and previous, and 1 being difference
+             between previous and current. See: set.difference() documentation for an explanation.
+    """
     table_cols = get_table_column_names("Slack")
     selection = "*" if not attrs else ",".join(get_only_valid_col_names("Slack", attrs))
     cursor.execute(
