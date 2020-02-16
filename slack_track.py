@@ -6,7 +6,7 @@ import logging
 import os
 import sqlite3
 import sys
-from typing import Dict, Iterable, Iterator, List, Tuple, Union
+from typing import Dict, Iterable, Iterator, Tuple, Union
 
 from slack import WebClient  # type: ignore
 import yaml
@@ -42,7 +42,7 @@ def flatten_dict(multi_level: dict) -> dict:
     Takes a single user dict and recursively pulls the keys and values, assembling them into a
     single-level deep dict.
     :param multi_level: dict from which you would like broken down to a single level deep
-    :return: 1D dict 
+    :return: 1D dict
     """
 
     def reduction(d: dict, items: tuple):
@@ -57,8 +57,6 @@ def flatten_dict(multi_level: dict) -> dict:
 
 
 def items_to_rows(users: list, column_names: tuple):
-    indices = {y: x for (x, y) in enumerate(column_names)}
-    num_of_cols = len(column_names)
     today = datetime.date.today()
 
     def make_row(user: dict):
@@ -80,7 +78,7 @@ def get_only_valid_col_names(table: str, col_names: Iterable[str]) -> Iterator[s
     Compares a group of column names against valid column names for that table as produced from the the
     SQLite PRAGMA table_info function for the specified table.
     :param table: The name of the table for which to check the column names.
-    :param col_names: An iterable (list, set, tuple, etc.) from which you would like to check the validity against 
+    :param col_names: An iterable (list, set, tuple, etc.) from which you would like to check the validity against
                       the table's column names.
     :return: Filter for all of the matches.
     """
@@ -125,7 +123,6 @@ def compare_current_and_previous_datasets(*attrs) -> Tuple[set, set]:
     :return: Tuple of the set differences, with 0 being difference between current and previous, and 1 being difference
              between previous and current. See: set.difference() documentation for an explanation.
     """
-    table_cols = get_table_column_names("Slack")
     selection = "*" if not attrs else ",".join(get_only_valid_col_names("Slack", attrs))
     cursor.execute(
         f"SELECT {selection} FROM Slack WHERE date = ?", (datetime.date.today(),)
