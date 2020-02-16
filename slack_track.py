@@ -106,7 +106,7 @@ def get_data_from_previous_run(*attrs) -> Iterator:
         )
         if not selection:
             raise ValueError(
-                "No valid column names specified. To get all columnds, leave argument empty"
+                "No valid column names specified. To get all columns, leave argument empty"
             )
         else:
             cursor.execute(
