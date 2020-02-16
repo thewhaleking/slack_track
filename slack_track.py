@@ -6,9 +6,9 @@ import logging
 import os
 import sqlite3
 import sys
-from typing import List, Tuple
+from typing import Dict, Iterable, Iterator, List, Tuple, Union
 
-from slack import WebClient
+from slack import WebClient  # type: ignore
 import yaml
 
 logging.basicConfig(
@@ -52,7 +52,7 @@ def flatten_dict(multi_level: dict) -> dict:
         else:
             return {**d, **{key: value}}
 
-    flat_dict = reduce(reduction, multi_level.items(), {})
+    flat_dict: Dict[str, Union[int, float, str, bool]] = reduce(reduction, multi_level.items(), {})
     return flat_dict
 
 
@@ -75,12 +75,12 @@ def get_table_column_names(table: str) -> list:
     return [x[1] for x in cursor]
 
 
-def get_only_valid_col_names(table: str, col_names: list) -> iter:
+def get_only_valid_col_names(table: str, col_names: Iterable[str]) -> Iterator[str]:
     table_cols = get_table_column_names("Slack")
     return filter(lambda x: x in table_cols, col_names)
 
 
-def get_data_from_previous_run(*attrs) -> iter:
+def get_data_from_previous_run(*attrs) -> Iterator:
     today = datetime.date.today()
     cursor.execute("SELECT DISTINCT date FROM Slack WHERE date != ?", (today,))
     sorted_dates = sorted(x[0] for x in cursor)
@@ -101,7 +101,7 @@ def get_data_from_previous_run(*attrs) -> iter:
             return (x for x in cursor)
 
 
-def compare_current_and_previous_datasets(*attrs) -> List[tuple]:
+def compare_current_and_previous_datasets(*attrs) -> List[set]:
     table_cols = get_table_column_names("Slack")
     selection = "*" if not attrs else ",".join(get_only_valid_col_names("Slack", attrs))
     cursor.execute(
