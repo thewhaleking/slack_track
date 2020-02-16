@@ -37,24 +37,6 @@ def get_slack_users(slack_client: WebClient) -> list:
         raise Exception("Unable to pull users list. Check your token and try again.")
 
 
-def flatten_keys(user: dict) -> List[str]:
-    """
-    Takes a single user dict and recursively pulls the keys, concatenating them into a list.
-    :param user: user dict from produced from the get_slack_users call
-    :return: 1D list of the keys as strs
-    """
-
-    def reduction(keys: list, items: tuple):
-        key, value = items
-        if type(value) is dict:
-            return reduce(reduction, value.items(), keys)
-        else:
-            return keys + [key]
-
-    keys = reduce(reduction, user.items(), [])
-    return list(keys)
-
-
 def flatten_dict(multi_level: dict) -> dict:
     """
     Takes a single user dict and recursively pulls the keys and values, assembling them into a
