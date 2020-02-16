@@ -121,7 +121,7 @@ def get_users_deleted_since_last_run():
     the last run. This should also give reactivated users.
     """
     comparison = compare_current_and_previous_datasets("name", "deleted")
-    return comparison[0] + comparison[1]
+    return comparison[0].union(comparison[1])
 
 
 def main():
