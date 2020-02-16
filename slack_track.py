@@ -115,14 +115,14 @@ def get_data_from_previous_run(*attrs) -> Iterator:
             return (x for x in cursor)
 
 
-def compare_current_and_previous_datasets(*attrs) -> List[set]:
+def compare_current_and_previous_datasets(*attrs) -> Tuple[set, set]:
     """
     Compares the previous two runs (where the most recent is usually the "current" run) of the script. Does the
     comparison by utilizing the set.differences of the two. This works well when comparing a few attributes, such as
     name and deleted, but doesn't work well when comparing all columns.
     :param attrs: The column names to compare between the two runs (e.g. "name", "deleted", etc.). If no attrs are
                   specified, pulls all columns with "*".
-    :return: List of the set differences, with 0 being difference between current and previous, and 1 being difference
+    :return: Tuple of the set differences, with 0 being difference between current and previous, and 1 being difference
              between previous and current. See: set.difference() documentation for an explanation.
     """
     table_cols = get_table_column_names("Slack")
@@ -132,10 +132,10 @@ def compare_current_and_previous_datasets(*attrs) -> List[set]:
     )
     todays_data = set(cursor)
     previous_data = set(get_data_from_previous_run(*attrs))
-    return [
+    return (
         todays_data.difference(previous_data),
         previous_data.difference(todays_data),
-    ]
+    )
 
 
 def get_users_deleted_since_last_run():
