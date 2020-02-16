@@ -89,15 +89,43 @@ def get_table_column_names(table: str) -> list:
     return [x[1] for x in cursor]
 
 
-def get_data_from_previous_run() -> iter:
+def get_only_valid_col_names(table: str, col_names: list) -> iter:
+    table_cols = get_table_column_names("Slack")
+    return filter(lambda x: x in table_cols, col_names)
+
+
+def get_data_from_previous_run(*attrs) -> iter:
     today = datetime.date.today()
     cursor.execute("SELECT DISTINCT date FROM Slack WHERE date != ?", (today,))
     sorted_dates = sorted(x[0] for x in cursor)
     if not sorted_dates:
         raise ValueError("Does not appear to have an data from a previous time.")
     else:
-        cursor.execute("SELECT * FROM Slack WHERE date = ?", (sorted_dates[-1],))
-        return (x for x in cursor)
+        selection = "*" if not attrs else ",".join(get_only_valid_col_names("Slack", attrs))
+        if not selection:
+            raise ValueError("No valid column names specified. To get all columnds, leave argument empty")
+        else:
+            cursor.execute(f"SELECT {selection} FROM Slack WHERE date = ?", (sorted_dates[-1],))
+            return (x for x in cursor)
+
+
+def compare_current_and_previous_datasets(*attrs) -> List[tuple]:
+    table_cols = get_table_column_names("Slack")
+    selection = "*" if not attrs else ",".join(get_only_valid_col_names("Slack", attrs))
+    cursor.execute(f"SELECT {selection} FROM Slack WHERE date = ?", (datetime.date.today(),))
+    todays_data = set(cursor)
+    previous_data = set(get_data_from_previous_run(*attrs))
+    return [todays_data.difference(previous_data), previous_data.difference(todays_data)]
+
+
+def get_users_deleted_since_last_run():
+    """
+    Mainly just a demo function. Gives the users that have had their deleted status changed since
+    the last run. This should also give reactivated users.
+    """
+    comparison = compare_current_and_previous_datasets("name", "deleted")
+    return comparison[0] + comparison[1]
+
 
 def main():
     slack_client = WebClient(token=CONFIG["slack_token"])
