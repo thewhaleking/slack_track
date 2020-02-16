@@ -84,7 +84,7 @@ def get_only_valid_col_names(table: str, col_names: Iterable[str]) -> Iterator[s
                       the table's column names.
     :return: Filter for all of the matches.
     """
-    table_cols = get_table_column_names("Slack")
+    table_cols = get_table_column_names(table)
     return filter(lambda x: x in table_cols, col_names)
 
 
