@@ -145,7 +145,7 @@ def get_users_created_and_deleted_since_last_run() -> str:
     second_group_users = {x[0] for x in comparison[1]}
     new_users = first_group_users.difference(second_group_users)
     deleted_users = second_group_users.difference(new_users)
-    output = "New Users:" + '\n'.join(new_users) + "\n\n\nDeleted Users:\n" + '\n'.join(deleted_users)
+    output = "New Users:\n" + '\n'.join(new_users) + "\n\n\nDeleted Users:\n" + '\n'.join(deleted_users)
     return output
 
 
