@@ -135,13 +135,18 @@ def compare_current_and_previous_datasets(*attrs) -> Tuple[set, set]:
     )
 
 
-def get_users_deleted_since_last_run():
+def get_users_created_and_deleted_since_last_run() -> str:
     """
-    Mainly just a demo function. Gives the users that have had their deleted status changed since
-    the last run. This should also give reactivated users.
+    Mainly just a demo function. Outputs a string with two groups: new users and users whose accounts have been
+    deactivated since the last run.
     """
     comparison = compare_current_and_previous_datasets("name", "deleted")
-    return comparison[0].union(comparison[1])
+    first_group_users = {x[0] for x in comparison[0]}
+    second_group_users = {x[0] for x in comparison[1]}
+    new_users = first_group_users.difference(second_group_users)
+    deleted_users = second_group_users.difference(new_users)
+    output = "New Users:" + '\n'.join(new_users) + "\n\n\nDeleted Users:\n" + '\n'.join(deleted_users)
+    return output
 
 
 def main():
