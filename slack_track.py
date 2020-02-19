@@ -21,7 +21,7 @@ try:
     with open(os.path.join(FILE_PATH, "config", "config.yaml")) as config_file:
         CONFIG = yaml.safe_load(config_file)
 except FileNotFoundError:
-    logging.error("Config file not found. Have you run setup.py yet?")
+    logging.error("Config file not found. Have you run install.py yet?")
     exit()
 
 con = sqlite3.connect("slack_track.db", check_same_thread=False)
