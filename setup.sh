@@ -7,5 +7,5 @@ fi;
 PY="$SCRIPT_PATH/venv/bin/python";
 "$PY" -m pip install -U pip;
 "$PY" -m pip install -r requirements.txt;
-"$PY" setup.py;
+"$PY" install.py;
 
