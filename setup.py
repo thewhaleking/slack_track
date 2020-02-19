@@ -21,19 +21,19 @@ def main():
         config.update({"slack_token": slack_token})
     with open(config_yaml, "w") as config_file:
         yaml.dump(config, config_file)
-    frequencies = (
-        "yearly",
-        "monthly",
-        "weekly",
-        "daily",
-        "manually (to not run automatically)",
-    )
+    frequencies = {
+            "yearly": "0 0 1 1 *",
+            "monthly": "0 0 1 * *",
+            "weekly": "0 0 * * 0",
+            "daily": "0 0 * * *",
+            "manually (to not run automatically)": "",
+        }
 
     def get_frequency() -> str:
         print("How often would you like the script to run?")
-        print(f"You can specify: {', '.join(frequencies)}")
+        print(f"You can specify: {', '.join(frequencies.keys())}")
         freq = input().strip()
-        if freq != "manually" and freq not in frequencies:
+        if freq != "manually" and freq not in frequencies.keys():
             return get_frequency()
         else:
             return freq
@@ -44,9 +44,9 @@ def main():
         script_path = os.path.join(FILE_PATH, "slack_track.py")
         user = os.environ["USER"]
         subprocess.call(
-            f"""(crontab -l; echo "@{desired_frequency} {python_bin} {script_path}" )"""
+            f"""(crontab -l; echo "{frequencies[desired_frequency]} {python_bin} {script_path}" )"""
             f"""| crontab -""",
-            shell=True,
+            shell=True
         )
 
 
