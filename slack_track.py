@@ -137,15 +137,25 @@ def compare_current_and_previous_datasets(*attrs) -> Tuple[set, set]:
 
 def get_users_created_and_deleted_since_last_run() -> str:
     """
-    Mainly just a demo function. Outputs a string with two groups: new users and users whose accounts have been
-    deactivated since the last run.
+    Mainly just a demo function. Outputs a string with three groups: new users, users whose accounts have been
+    deactivated since the last run, and users whose accounts have been reactivated since the last run.
     """
-    comparison = compare_current_and_previous_datasets("name", "deleted")
-    first_group_users = {x[0] for x in comparison[0]}
-    second_group_users = {x[0] for x in comparison[1]}
+    first_group, second_group = compare_current_and_previous_datasets("name", "deleted")
+    fg_dict = {x[0]: x[1] for x in first_group}
+    sg_dict = {x[0]: x[1] for x in second_group}
+    first_group_users = set(fg_dict.keys())
+    second_group_users = set(sg_dict.keys())
     new_users = first_group_users.difference(second_group_users)
-    deleted_users = second_group_users.difference(new_users)
-    output = "New Users:\n" + '\n'.join(new_users) + "\n\n\nDeleted Users:\n" + '\n'.join(deleted_users)
+    changed_status_users = second_group_users.difference(new_users)
+    reactivated_users = {x for x in changed_status_users if sg_dict[x] == 1}
+    deleted_users = {x for x in changed_status_users if sg_dict[x] == 0}
+    output = (
+            "New Users:\n" +
+            '\n'.join(new_users) +
+            "\n\n\nDeleted Users:\n" +
+            '\n'.join(deleted_users) +
+            "\n\n\nReactivated Users:\n" +
+            "\n".join(reactivated_users))
     return output
 
 
