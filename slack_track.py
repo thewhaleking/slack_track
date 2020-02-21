@@ -24,7 +24,7 @@ except FileNotFoundError:
     logging.error("Config file not found. Have you run install.py yet?")
     exit()
 
-con = sqlite3.connect("slack_track.db", check_same_thread=False)
+con = sqlite3.connect(os.path.join(FILE_PATH, "slack_track.db"), check_same_thread=False)
 con.isolation_level = None
 cursor = con.cursor()
 
@@ -150,6 +150,7 @@ def get_users_created_and_deleted_since_last_run() -> str:
 
 
 def main():
+    print("Starting up.")
     slack_client = WebClient(token=CONFIG["slack_token"])
     slack_users = get_slack_users(slack_client)
     column_names = tuple(["date"] + list(flatten_dict(slack_users[0]).keys()))
