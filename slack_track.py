@@ -6,6 +6,7 @@ import logging
 import os
 import sqlite3
 import sys
+from textwrap import dedent
 from typing import Dict, Iterable, Iterator, Tuple, Union
 
 from slack import WebClient  # type: ignore
@@ -149,13 +150,21 @@ def get_users_created_and_deleted_since_last_run() -> str:
     changed_status_users = second_group_users.difference(new_users)
     reactivated_users = {x for x in changed_status_users if sg_dict[x] == 1}
     deleted_users = {x for x in changed_status_users if sg_dict[x] == 0}
-    output = (
-            "New Users:\n" +
-            '\n'.join(new_users) +
-            "\n\n\nDeleted Users:\n" +
-            '\n'.join(deleted_users) +
-            "\n\n\nReactivated Users:\n" +
-            "\n".join(reactivated_users))
+    output = dedent(
+            """
+            New Users:
+            {}
+
+
+            Deleted Users
+            {}
+
+
+            Reactivated Users:
+            {}
+            """
+            ).format(*map(lambda x: "\n".join(x), 
+                    (new_users, deleted_users, reactivated_users)))
     return output
 
 
