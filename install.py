@@ -12,7 +12,7 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 def main():
     config_yaml = os.path.join(FILE_PATH, "config", "config.yaml")
     if not os.path.exists(config_yaml):
-        config_template = os.path.join(FILE_PATH, "config", "config.yaml.tpl")
+        config_template = os.path.join(FILE_PATH, "config", "config.tpl.yaml")
         shutil.copyfile(config_template, config_yaml)
     with open(config_yaml) as config_file:
         config = yaml.safe_load(config_file)
@@ -49,7 +49,7 @@ def main():
         )
     reports_fp = os.path.join(FILE_PATH, "reports.py")
     if not os.path.exists(reports_fp):
-        shutil.copyfile(os.path.join(FILE_PATH, "reports.py.tpl"), reports_fp)
+        shutil.copyfile(os.path.join(FILE_PATH, "reports.tpl.py"), reports_fp)
 
 
 if __name__ == "__main__":
