@@ -49,7 +49,7 @@ def main():
         )
     reports_fp = os.path.join(FILE_PATH, "reports.py")
     if not os.path.exists(reports_fp):
-        shutil.copyfile(reports_fp, os.path.join(FILE_PATH, "reports.py"))
+        shutil.copyfile(os.path.join(FILE_PATH, "reports.py.tpl"), reports_fp)
 
 
 if __name__ == "__main__":
