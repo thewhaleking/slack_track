@@ -79,7 +79,7 @@ def main():
         f"INSERT INTO Slack ({col_name_strings}) VALUES ({question_marks})", rows
     )
     db.con.commit()
-    reports.main()
+    reports.main(db)
 
 
 if __name__ == "__main__":
