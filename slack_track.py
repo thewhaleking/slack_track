@@ -5,7 +5,7 @@ from functools import reduce
 import logging
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Dict, List, Union
 
 from slack import WebClient  # type: ignore
 import yaml
@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
-FlatDict = Dict[str, Any[int, float, str, bool, list]]
+FlatDict = Dict[str, Union[int, float, str, bool, list]]
 
 try:
     with open(os.path.join(FILE_PATH, "config", "config.yaml")) as config_file:
@@ -59,7 +59,7 @@ def items_to_rows(users: List[dict], column_names: tuple):
     today = datetime.date.today()
 
     def make_row(user: dict) -> list:
-        flat = {**flatten_dict(user), **{"date": today}}
+        flat = {**flatten_dict(user), **{"date": str(today)}}
         row = [flat.get(x, None) for x in column_names]
         return row
 
