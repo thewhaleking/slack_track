@@ -4,7 +4,7 @@ import unittest
 import slack_track
 
 
-class TestStringMethods(unittest.TestCase):
+class TestSlackTrack(unittest.TestCase):
     def test_flatten_dict(self):
         initial_dict = {
             "one": 1,
