@@ -31,4 +31,5 @@ jobs:
     - name: Test with PyTest
       run: |
         pip install pytest
-        PYTHONPATH=`pwd`:`pwd`/..:$PYTHONPATH pytest
+        echo "def main(db): pass" > `pwd`/reports.py
+        PYTHONPATH=`pwd`:$PYTHONPATH pytest
