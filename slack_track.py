@@ -5,7 +5,7 @@ from functools import reduce
 import logging
 import os
 import sys
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Iterator
 
 from slack import WebClient  # type: ignore
 import yaml
@@ -55,7 +55,7 @@ def flatten_dict(multi_level: dict) -> FlatDict:
     return flat_dict
 
 
-def items_to_rows(users: List[dict], column_names: tuple):
+def items_to_rows(users: List[dict], column_names: tuple) -> Iterator:
     today = datetime.date.today()
 
     def make_row(user: dict) -> list:
