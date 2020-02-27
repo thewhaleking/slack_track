@@ -10,6 +10,7 @@ from typing import Dict, Union
 from slack import WebClient  # type: ignore
 import yaml
 
+import reports
 from utils.database_tools import DatabaseTools
 
 logging.basicConfig(
@@ -78,6 +79,7 @@ def main():
         f"INSERT INTO Slack ({col_name_strings}) VALUES ({question_marks})", rows
     )
     db.con.commit()
+    reports.main()
 
 
 if __name__ == "__main__":
