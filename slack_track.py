@@ -74,7 +74,7 @@ def main():
     rows = items_to_rows(slack_users, column_names)
     question_marks = ",".join("?" for _ in range(len(column_names)))
     col_name_strings = ",".join(str(x) for x in column_names)
-    db = DatabaseTools("slack_track.db", column_names)
+    db = DatabaseTools(os.path.join(FILE_PATH, "slack_track.db"), column_names)
     db.cursor.executemany(
         f"INSERT INTO Slack ({col_name_strings}) VALUES ({question_marks})", rows
     )

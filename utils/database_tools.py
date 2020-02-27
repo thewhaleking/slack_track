@@ -10,7 +10,7 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class DatabaseTools:
     def __init__(self, db_name, column_names):
-        self.con = sqlite3.connect(os.path.join(FILE_PATH, db_name), check_same_thread=False)
+        self.con = sqlite3.connect(db_name, check_same_thread=False)
         self.con.isolation_level = None
         self.cursor = self.con.cursor()
         self.cursor.execute(f"CREATE TABLE IF NOT EXISTS Slack {column_names}")
