@@ -31,4 +31,4 @@ jobs:
     - name: Test with PyTest
       run: |
         pip install pytest
-        PYTHONPATH=`pwd`:$PYTHONPATH pytest
+        PYTHONPATH=`pwd`:`pwd`/..:$PYTHONPATH pytest
