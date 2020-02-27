@@ -42,7 +42,6 @@ def main():
     if desired_frequency != "manually":
         python_bin = os.path.join(FILE_PATH, "venv", "bin", "python")
         script_path = os.path.join(FILE_PATH, "slack_track.py")
-        user = os.environ["USER"]
         subprocess.call(
             f"""(crontab -l; echo "{frequencies[desired_frequency]} {python_bin} {script_path}" )"""
             f"""| crontab -""",
