@@ -1,3 +1,5 @@
+![](https://github.com/bhimesuber/slack_track/workflows/.github/workflows/pythonapp.yml/badge.svg)
+
 # Slack Track
 Tracks changes to the user base of your Slack instance across a given time period
 
