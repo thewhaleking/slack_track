@@ -1,3 +1,4 @@
+jinja2~=2.11.1
 mypy~=0.761
 PyYAML~=5.3
 slackclient~=2.5.0

@@ -134,3 +134,4 @@ config/config.yaml
 # custom
 slack_track.db
 reports.py
+reports/
