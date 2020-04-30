@@ -68,7 +68,7 @@ def get_users_created_and_deleted_since_last_run(db: DatabaseTools) -> str:
     return output
 
 
-def write_reports():
+def write_reports(db):
     with open("reports.txt", "a+") as reports_file:
         reports_file.write(f"{date.today()} Report:\n")
         users = get_users_created_and_deleted_since_last_run(db)
@@ -77,4 +77,4 @@ def write_reports():
 
 
 def main(db: DatabaseTools):
-    write_reports()
+    write_reports(db)
