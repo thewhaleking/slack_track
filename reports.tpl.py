@@ -42,10 +42,10 @@ def get_users_created_and_deleted_since_last_run(db: DatabaseTools) -> str:
     reactivated_users = {x for x in changed_status_users if sg_dict[x] == 1}
     deleted_users = {x for x in changed_status_users if sg_dict[x] == 0}
 
-    def format_cols(name: str):
+    def format_cols(name: str) -> str:
         # for demonstration purposes only, your Slack instance might have different field names here
-        cols = match_other_columns(db, name, "name", "name", "real_name", "title")
-        return map(lambda x: " | ".join(x), cols)
+        cols = match_other_columns(db, name, "name", "name", "real_name", "title") or ""
+        return "\n".join(map(" | ".join, cols))
 
     output = dedent(
         """
@@ -61,10 +61,10 @@ def get_users_created_and_deleted_since_last_run(db: DatabaseTools) -> str:
         {}
         """
     ).format(*map(lambda x: "\n".join(x), (
-        *map(format_cols, new_users),
-        *map(format_cols, deleted_users),
-        *map(format_cols, reactivated_users))
-                  ))
+        map(format_cols, new_users),
+        map(format_cols, deleted_users),
+        map(format_cols, reactivated_users)
+                  )))
     return output
 
 
