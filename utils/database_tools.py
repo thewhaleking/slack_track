@@ -13,6 +13,7 @@ class DatabaseTools:
         self.con.isolation_level = None
         self.cursor = self.con.cursor()
         self.cursor.execute(f"CREATE TABLE IF NOT EXISTS Slack {column_names}")
+        self.cursor.execute("PRAGMA JOURNAL_MODE = WAL;")
         self.con.commit()
 
     def get_table_column_names(self, table: str) -> list:
