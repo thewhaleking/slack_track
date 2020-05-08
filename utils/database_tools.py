@@ -64,8 +64,12 @@ class DatabaseTools:
         selection = "*" if not attrs else ",".join(self.get_only_valid_col_names("Slack", attrs))
         self.cursor.execute(f"SELECT {selection} FROM Slack WHERE date = ?", (datetime.date.today(),))
         todays_data = set(self.cursor)
-        previous_data = set(self.get_data_from_previous_run(*attrs))
-        return (
-            todays_data.difference(previous_data),
-            previous_data.difference(todays_data),
-        )
+        try:
+            previous_data = set(self.get_data_from_previous_run(*attrs))
+            return (
+                todays_data.difference(previous_data),
+                previous_data.difference(todays_data),
+            )
+        except ValueError as e:
+            print(e, "You can ignore this if this is the first time you're running this program.", sep="\n")
+            exit(1)
