@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/bhimesuber/slack_track/workflows/Python%20application/badge.svg)](https://github.com/bhimesuber/slack_track/actions)
+[![Actions Status](https://github.com/bhimesuber/slack_track/workflows/Tests/badge.svg)](https://github.com/bhimesuber/slack_track/actions)
 
 # Slack Track
 Tracks changes to the user base of your Slack instance across a given time period
