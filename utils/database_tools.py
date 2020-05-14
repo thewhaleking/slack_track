@@ -14,6 +14,7 @@ class DatabaseTools:
         self.cursor = self.con.cursor()
         self.cursor.execute(f"CREATE TABLE IF NOT EXISTS Slack {column_names}")
         self.cursor.execute("PRAGMA JOURNAL_MODE = WAL;")
+        self.cursor.execute("PRAGMA SYNCHRONOUS = 1;")
         self.con.commit()
 
     def get_table_column_names(self, table: str) -> list:
