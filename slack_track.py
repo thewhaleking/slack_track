@@ -7,7 +7,8 @@ import os
 import sys
 from typing import Dict, List, Union, Iterator
 
-from slack import WebClient  # type: ignore
+# from slack import WebClient  # type: ignore
+from slack_sdk import WebClient
 import yaml
 
 import reports
